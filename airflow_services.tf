@@ -49,6 +49,14 @@ resource "aws_ecs_service" "airflow_webserver" {
     # Preserve the desired count when scaling the service
     ignore_changes = [desired_count]
   }
+
+  service_connect_configuration {
+    enabled = true
+
+    service {
+      port_name = "web"
+    }
+  }
 }
 
 locals {
@@ -104,5 +112,13 @@ resource "aws_ecs_service" "airflow_control_plane" {
   lifecycle {
     # Preserve the desired count when scaling the service
     ignore_changes = [desired_count]
+  }
+
+  service_connect_configuration {
+    enabled = true
+
+    service {
+      port_name = "web"
+    }
   }
 }

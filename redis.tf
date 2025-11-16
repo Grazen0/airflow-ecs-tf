@@ -64,27 +64,6 @@ resource "aws_ecs_task_definition" "airflow_redis" {
   }
 }
 
-
-resource "aws_service_discovery_service" "airflow_redis_service" {
-  name = "redis"
-
-  dns_config {
-    namespace_id = aws_service_discovery_private_dns_namespace.airflow_namespace.id
-
-    dns_records {
-      ttl  = 60
-      type = "A"
-    }
-
-    routing_policy = "MULTIVALUE"
-  }
-
-  health_check_custom_config {
-    failure_threshold = 1
-  }
-}
-
-
 resource "aws_ecs_service" "airflow_redis" {
   name                               = "redis"
   cluster                            = aws_ecs_cluster.airflow_cluster.arn
@@ -124,7 +103,16 @@ resource "aws_ecs_service" "airflow_redis" {
     subnets          = local.airflow_vpc_subnets_ids
   }
 
-  service_registries {
-    registry_arn = aws_service_discovery_service.airflow_redis_service.arn
+  service_connect_configuration {
+    enabled = true
+
+    service {
+      port_name = "redis"
+      discovery_name = "redis"
+      client_alias {
+        dns_name = "redis"
+        port     = 6379
+      }
+    }
   }
 }

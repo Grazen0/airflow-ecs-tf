@@ -1,8 +1,3 @@
-resource "aws_service_discovery_private_dns_namespace" "airflow_namespace" {
-  name = "airflow.${local.deployment_id}"
-  vpc  = local.airflow_vpc_id
-}
-
 resource "aws_ecs_cluster" "airflow_cluster" {
   name = "Airflow-${local.deployment_id}"
 
@@ -15,10 +10,6 @@ resource "aws_ecs_cluster" "airflow_cluster" {
   setting {
     name  = "containerInsights"
     value = "disabled"
-  }
-
-  service_connect_defaults {
-    namespace = aws_service_discovery_private_dns_namespace.airflow_namespace.arn
   }
 }
 

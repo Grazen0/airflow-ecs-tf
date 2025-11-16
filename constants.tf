@@ -49,7 +49,7 @@ locals {
     },
     {
       name  = "AIRFLOW__CELERY__BROKER_URL"
-      value = "redis://redis.${aws_service_discovery_private_dns_namespace.airflow_namespace.name}:6379/0"
+      value = "redis://redis:6379/0"
     },
     {
       name  = "AIRFLOW__CORE__FERNET_KEY"
