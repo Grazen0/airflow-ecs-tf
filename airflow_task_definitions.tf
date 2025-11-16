@@ -5,8 +5,8 @@ resource "aws_ecs_task_definition" "airflow_webserver" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = "512"  # 0.5 vCPU
   memory                   = "1024" # 1 GB RAM
-  execution_role_arn       = aws_iam_role.airflow_ecs_execution_role.arn
-  task_role_arn            = aws_iam_role.airflow_ecs_task_role.arn
+  execution_role_arn       = var.labrole_arn
+  task_role_arn            = var.labrole_arn
 
   container_definitions = jsonencode([
     {
@@ -70,8 +70,8 @@ resource "aws_ecs_task_definition" "airflow_scheduler" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = "1024" # 1 vCPU
   memory                   = "2048" # 2 GB RAM
-  execution_role_arn       = aws_iam_role.airflow_ecs_execution_role.arn
-  task_role_arn            = aws_iam_role.airflow_ecs_task_role.arn
+  execution_role_arn       = var.labrole_arn
+  task_role_arn            = var.labrole_arn
 
   container_definitions = jsonencode([
     {
@@ -128,8 +128,8 @@ resource "aws_ecs_task_definition" "airflow_worker" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = "1024" # 1 vCPU
   memory                   = "2048" # 2 GB RAM
-  execution_role_arn       = aws_iam_role.airflow_ecs_execution_role.arn
-  task_role_arn            = aws_iam_role.airflow_ecs_task_role.arn
+  execution_role_arn       = var.labrole_arn
+  task_role_arn            = var.labrole_arn
 
   container_definitions = jsonencode([
     {
@@ -185,8 +185,8 @@ resource "aws_ecs_task_definition" "airflow_triggerer" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = "512"  # 0.5 vCPU
   memory                   = "1024" # 1 GB RAM
-  execution_role_arn       = aws_iam_role.airflow_ecs_execution_role.arn
-  task_role_arn            = aws_iam_role.airflow_ecs_task_role.arn
+  execution_role_arn       = var.labrole_arn
+  task_role_arn            = var.labrole_arn
 
   container_definitions = jsonencode([
     {
@@ -242,8 +242,8 @@ resource "aws_ecs_task_definition" "airflow_init" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = "256" # .25 vCPU
   memory                   = "512" # 0.5 GB RAM
-  execution_role_arn       = aws_iam_role.airflow_ecs_execution_role.arn
-  task_role_arn            = aws_iam_role.airflow_ecs_task_role.arn
+  execution_role_arn       = var.labrole_arn
+  task_role_arn            = var.labrole_arn
 
   container_definitions = jsonencode([
     {

@@ -8,8 +8,8 @@ resource "aws_ecs_task_definition" "airflow_redis" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = "1024" # 1 vCPU
   memory                   = "2048" # 2 GB RAM
-  execution_role_arn       = aws_iam_role.airflow_ecs_execution_role.arn
-  task_role_arn            = aws_iam_role.airflow_ecs_task_role.arn
+  execution_role_arn       = var.labrole_arn
+  task_role_arn            = var.labrole_arn
 
   container_definitions = jsonencode([
     {

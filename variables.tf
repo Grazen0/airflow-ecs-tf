@@ -88,3 +88,8 @@ variable "airflow_scheduler_scale_max_capacity" {
 variable "custom_load_balancer_arn" {
   description = "ARN of a load balancer to use for exposing the Airflow Webserver. If not provided, a new load balancer will be created"
 }
+
+variable "labrole_arn" {
+  type = string
+  description = "ARN of the LabRole to use"
+}

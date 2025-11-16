@@ -89,7 +89,7 @@ locals {
     },
     {
       name  = "AIRFLOW_VAR_AIRFLOW_DEPLOYMENT_ECS_TASK_ROLE_ARN"
-      value = aws_iam_role.airflow_ecs_task_role.arn
+      value = var.labrole_arn
     },
     {
       name  = "AIRFLOW_VAR_AIRFLOW_DEPLOYMENT_CLOUDWATCH_LOG_GROUP_NAME"
