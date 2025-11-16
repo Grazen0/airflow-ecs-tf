@@ -1,4 +1,3 @@
-
 resource "aws_ecs_service" "airflow_webserver" {
   name                               = "airflow-webserver"
   cluster                            = aws_ecs_cluster.airflow_cluster.arn

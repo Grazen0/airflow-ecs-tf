@@ -1,3 +1,7 @@
+resource "aws_service_discovery_http_namespace" "airflow_sc_namespace" {
+  name = "airflow-service-connect"
+}
+
 resource "aws_ecs_cluster" "airflow_cluster" {
   name = "Airflow-${local.deployment_id}"
 
@@ -10,6 +14,10 @@ resource "aws_ecs_cluster" "airflow_cluster" {
   setting {
     name  = "containerInsights"
     value = "disabled"
+  }
+
+  service_connect_defaults {
+    namespace = aws_service_discovery_http_namespace.airflow_sc_namespace.arn
   }
 }
 

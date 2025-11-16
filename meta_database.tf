@@ -32,42 +32,26 @@ resource "aws_security_group" "airflow_db_security_group" {
   }
 }
 
-# Create the database as an Aurora Serverless PostgreSQL database
-resource "aws_rds_cluster" "airflow_db" {
-  cluster_identifier              = "airflow-db-${local.deployment_id}"
-  master_username                 = "postgres"
-  db_subnet_group_name            = aws_db_subnet_group.airflow_db_subnet_group.name
-  vpc_security_group_ids          = [aws_security_group.airflow_db_security_group.id]
-  backup_retention_period         = 7
-  copy_tags_to_snapshot           = true
-  database_name                   = "airflow"
-  db_cluster_parameter_group_name = "default.aurora-postgresql17"
-  deletion_protection             = false
-  enable_http_endpoint            = false
-  engine                          = "aurora-postgresql"
-  engine_mode                     = "provisioned"
-  engine_version                  = "17.4"
-  port                            = 5432
-  preferred_backup_window         = "02:00-03:00"
-  preferred_maintenance_window    = "sun:05:00-sun:06:00"
-  manage_master_user_password     = true
-  skip_final_snapshot             = true
-  storage_encrypted               = true
+resource "aws_db_instance" "airflow_db" {
+  identifier            = "airflow-db-${local.deployment_id}"
+  engine                = "postgres"
+  engine_version        = "14"          # or whichever version AWS Academy allows
+  instance_class        = "db.t3.micro" # smallest allowed in Academy
+  allocated_storage     = 20
+  max_allocated_storage = 100
 
-  serverlessv2_scaling_configuration {
-    # Aurora Serverless automatically scales the cluster based on the number of connections
-    # and CPU utilization, up to the maximum capacity. 1 ACU = 2 GiB of memory and corresponding CPU.
-    # See https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v2.how-it-works.html#aurora-serverless-v2.how-it-works.capacity
-    max_capacity = var.airflow_db_acu_max_capacity
-    min_capacity = var.airflow_db_acu_min_capacity
-  }
-}
+  db_subnet_group_name   = aws_db_subnet_group.airflow_db_subnet_group.name
+  vpc_security_group_ids = [aws_security_group.airflow_db_security_group.id]
 
-resource "aws_rds_cluster_instance" "airflow_db_instance" {
-  identifier         = "airflow-db-instance-${local.deployment_id}"
-  cluster_identifier = aws_rds_cluster.airflow_db.id
-  engine             = aws_rds_cluster.airflow_db.engine
-  engine_version     = aws_rds_cluster.airflow_db.engine_version
-  instance_class     = "db.serverless"
-  promotion_tier     = 1
+  db_name                     = "airflow"
+  username                    = "postgres"
+  manage_master_user_password = true
+
+  multi_az            = false
+  publicly_accessible = false
+
+  backup_retention_period = 7
+  skip_final_snapshot     = true
+  deletion_protection     = false
+  storage_encrypted       = true
 }

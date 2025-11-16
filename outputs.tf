@@ -1,6 +1,6 @@
 output "rds_master_user_secret_arn" {
   description = "ARN of the secret containing the master user password for the Airflow database"
-  value       = aws_rds_cluster.airflow_db.master_user_secret[0].secret_arn
+  value       = aws_db_instance.airflow_db.master_user_secret[0].secret_arn
 }
 
 output "airflow_deployment_id" {

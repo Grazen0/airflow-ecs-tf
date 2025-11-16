@@ -41,11 +41,11 @@ locals {
     },
     {
       name  = "AIRFLOW__CORE__SQL_ALCHEMY_CONN"
-      value = "postgresql+psycopg2://${urlencode(local.airflow_db_username)}:${urlencode(local.airflow_db_password)}@${aws_rds_cluster.airflow_db.endpoint}/${aws_rds_cluster.airflow_db.database_name}"
+      value = "postgresql+psycopg2://${urlencode(local.airflow_db_username)}:${urlencode(local.airflow_db_password)}@${aws_db_instance.airflow_db.address}/${aws_db_instance.airflow_db.db_name}"
     },
     {
       name  = "AIRFLOW__CELERY__RESULT_BACKEND"
-      value = "db+postgresql://${urlencode(local.airflow_db_username)}:${urlencode(local.airflow_db_password)}@${aws_rds_cluster.airflow_db.endpoint}/${aws_rds_cluster.airflow_db.database_name}"
+      value = "db+postgresql://${urlencode(local.airflow_db_username)}:${urlencode(local.airflow_db_password)}@${aws_db_instance.airflow_db.address}/${aws_db_instance.airflow_db.db_name}"
     },
     {
       name  = "AIRFLOW__CELERY__BROKER_URL"
@@ -107,12 +107,12 @@ locals {
 }
 
 data "aws_secretsmanager_secret_version" "airflow_db_password" {
-  secret_id = aws_rds_cluster.airflow_db.master_user_secret[0].secret_arn
+  secret_id = aws_db_instance.airflow_db.master_user_secret[0].secret_arn
 }
 
 # Credentials
 locals {
-  airflow_db_username = aws_rds_cluster.airflow_db.master_username
+  airflow_db_username = aws_db_instance.airflow_db.username
   airflow_db_password = jsondecode(data.aws_secretsmanager_secret_version.airflow_db_password.secret_string)["password"]
 }
 
